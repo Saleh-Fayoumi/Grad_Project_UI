@@ -19,42 +19,18 @@ body {
     gap: 3rem;
     
 }
-.main-div h1{
-    background: linear-gradient(45deg, #df2e87, #7a0fd1); /* Gradient background */
-    -webkit-background-clip: text; /* Clip the background to the text */
-    color: transparent;
-}
 
 
 
-  .radio-btns{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 2rem;
-    background: linear-gradient(45deg, #df2e87, #7a0fd1); /* Gradient background */
-    -webkit-background-clip: text; /* Clip the background to the text */
-    color: transparent;
-  }
 
-  .radio-text-div{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .radio-text-div p{
-    padding: 0;
-    margin: 0.5rem;
-    font-size: 1.2rem;
-  }
-
+  
+  
   .question-div{
     display: flex;
     flex-direction: column;
     justify-content: center;
     gap: 0.3rem;
+    width: 50%;
   }
   .question-div label{
     font-size: 1rem;
@@ -73,7 +49,7 @@ body {
    overflow: hidden;
     background: transparent;
     box-sizing: border-box; /* Ensures padding is included in the width */
-    width: 50rem;
+    width: 100%;
   }
   
   .input:active {
@@ -229,4 +205,68 @@ body {
   .btn:where(:hover, :focus) {
     color: #fff;
   }
-  
+  .radio-tabs{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(45deg, #df2e87, #7a0fd1); /* Gradient background */
+    -webkit-background-clip: text; /* Clip the background to the text */
+    color: transparent;
+  }
+
+  .radio-h-div{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+  }
+
+  .radio-h-div h1{
+    background: linear-gradient(45deg, #df2e87, #7a0fd1); /* Gradient background */
+    -webkit-background-clip: text; /* Clip the background to the text */
+    color: transparent;
+}
+
+
+@media(max-width:1500px){
+    
+    .question-div{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 0.3rem;
+        width: 75%;
+      }
+    .input{
+        width: 100%;
+    }
+}
+
+
+@media(max-width:1000px){
+    
+    .question-div{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 0.3rem;
+        width: 100%;
+      }
+    .input{
+        width: 100%;
+    }
+}
+
+@media(max-width:450px){
+    h1{
+        font-size: 1.7rem;
+    }
+   .radio-tabs label{
+        font-size: 0.9rem;
+        
+   }
+
+
+    
+}

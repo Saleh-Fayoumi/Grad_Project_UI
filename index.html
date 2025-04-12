@@ -10,25 +10,41 @@
     <title>Grade Smarter</title>
 </head>
 <body>
+    <div class="radio-h-div">
+        <div>
+            <h1>Welcome to Grade Smarter</h1>
+        </div>
+        <div>
+            <h3>Please select input type</h3>
 
+        </div>
+        <div class="radio-tabs">
+            <label>
+            <input type="radio" name="mode" value="multi" checked onchange="switchTab(this.value)">
+             Batch Evaluation
+            </label>
+            <label>
+             <input type="radio" name="mode" value="single" onchange="switchTab(this.value)">
+             Single answer Evaluation
+            </label>
+        </div>
+
+    </div>
     <form action="" id="gradingForm" class="main-div">
-    <h1>Welcome to Grade Smarter</h1>
-
-
-  
+     
     <div class="question-div">
         <label>Enter question for evaluation: <span>*</span></label>
-        <textarea id="question" name="text" class="input" placeholder="e.g., What are the crud operations in sql?" required></textarea>
+        <textarea id="multi-question" name="text" class="input" placeholder="e.g., What are the crud operations in sql?" required></textarea>
      </div>
         
     <div class="question-div">
          <label>Enter expected answer for evaluation: <span>*</span></label>
-         <textarea id="answer" name="text" class="input" placeholder="e.g., CREATE, READ, UPDATE, DELETE" required></textarea>
+         <textarea id="multi-answer" name="text" class="input" placeholder="e.g., CREATE, READ, UPDATE, DELETE" required></textarea>
     </div>
         
     <div class="question-div">
         <label>Enter evaluation rubric prompt: (optional)</label>
-        <textarea id="rubric" name="text" class="input" placeholder="e.g., Evaluate based on accuracy, completeness, and clarity of the answer"></textarea>
+        <textarea id="multi-rubric" name="text" class="input" placeholder="e.g., Evaluate based on accuracy, completeness, and clarity of the answer"></textarea>
     </div>
         
     <div class="file-label-div">
@@ -50,37 +66,107 @@
     </div>
     
 </form>
-    
+
+    <form id="singleForm" class="main-div">
+        <div class="question-div">
+            <label>Enter question for evaluation: <span>*</span></label>
+            <textarea id="single-question" name="text" class="input" placeholder="e.g., What are the crud operations in sql?" required></textarea>
+         </div>
+            
+        <div class="question-div">
+             <label>Enter expected answer for evaluation: <span>*</span></label>
+             <textarea id="single-answer" name="text" class="input" placeholder="e.g., CREATE, READ, UPDATE, DELETE" required></textarea>
+        </div>
+
+        <div class="question-div">
+            <label>Enter Student answer<span>*</span></label>
+            <textarea id="single-student-answer" name="text" class="input"  required></textarea>
+        </div>
+
+        <div class="question-div">
+            <label>Enter evaluation rubric prompt: (optional)</label>
+            <textarea id="single-rubric" name="text" class="input" placeholder="e.g., Evaluate based on accuracy, completeness, and clarity of the answer"></textarea>
+        </div>
+        <div>
+            <button type="submit" class="btn">Grade question </button>
+        </div>
+    </form>
+  </div>
          
-<script>
+  <script>
+    function switchTab(mode) {
+      const multiForm = document.getElementById("gradingForm");
+      const singleForm = document.getElementById("singleForm");
+  
+      if (mode === "multi") {
+        multiForm.style.display = "flex";
+        singleForm.style.display = "none";
+      } else {
+        singleForm.style.display = "flex";
+        multiForm.style.display = "none";
+      }
+    }
+  
+    window.onload = function () {
+      const selectedMode = document.querySelector('input[name="mode"]:checked').value;
+      switchTab(selectedMode);
+    };
+  
     document.getElementById('file').addEventListener('change', function (e) {
       const fileName = e.target.files[0] ? e.target.files[0].name : 'No file selected';
       document.getElementById('fileNameLabel').textContent = "File selected: " + fileName;
     });
   
-    document.getElementById('gradingForm').addEventListener('submit', async function (e) {
+    document.getElementById('gradingForm').addEventListener('submit', submitForm);
+    document.getElementById('singleForm').addEventListener('submit', submitForm);
+  
+    async function submitForm(e) {
       e.preventDefault();
   
-      const question = document.getElementById('question').value;
-      const answer = document.getElementById('answer').value;
-      const rubric = document.getElementById('rubric').value;
-      const file = document.getElementById('file').files[0];
+      const selectedMode = document.querySelector('input[name="mode"]:checked').value;
+      const formData = new FormData();
   
-      if (!question || !answer || !file) {
-        alert("Please fill in the question, answer, and upload a file.");
-        return;
+      if (selectedMode === "multi") {
+        const question = document.getElementById('multi-question').value;
+        const answer = document.getElementById('multi-answer').value;
+        const rubric = document.getElementById('multi-rubric').value;
+        const file = document.getElementById('file').files[0];
+  
+        if (!question || !answer || !file) {
+          alert("Please fill in the question, answer, and upload a file.");
+          return;
+        }
+  
+        formData.append('question', question);
+        formData.append('answer', answer);
+        formData.append('rubric', rubric);
+        formData.append('file', file);
+  
+      } else {
+        const question = document.getElementById('single-question').value;
+        const answer = document.getElementById('single-answer').value;
+        const studentAnswer = document.getElementById('single-student-answer').value;
+        const rubric = document.getElementById('single-rubric').value;
+  
+        if (!question || !answer || !studentAnswer) {
+          alert("Please fill in all required fields.");
+          return;
+        }
+  
+        const content = `Student1: ${studentAnswer}`;
+        const blob = new Blob([content], { type: "text/plain" });
+        const file = new File([blob], "student_answers.txt");
+  
+        formData.append('question', question);
+        formData.append('answer', answer);
+        formData.append('rubric', rubric);
+        formData.append('file', file);
       }
   
-      const formData = new FormData();
-      formData.append('question', question);
-      formData.append('answer', answer);
-      formData.append('rubric', rubric);
-      formData.append('file', file);
-  
       try {
-        const response = await fetch("https://0e2c-35-194-174-86.ngrok-free.app/upload", {
+        const response = await fetch("https://ec43-34-125-74-211.ngrok-free.app/upload", {
           method: "POST",
-          body: formData            
+          body: formData
         });
   
         const blob = await response.blob();
@@ -93,8 +179,9 @@
         console.error("Error:", error);
         alert("There was an error during grading. Please try again.");
       }
-    });
-</script>
-
+    }
+  </script>
+  
+  
 </body>
 </html>
